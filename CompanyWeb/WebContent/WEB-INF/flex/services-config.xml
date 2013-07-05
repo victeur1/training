@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+
+    <services>
+        <service-include file-path="remoting-config.xml" />
+	</services>
+	
+   	<!-- For more details about channel definition configuration check http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
+    <channels>
+    	
+        <channel-definition id="amfChannel" class="mx.messaging.channels.AMFChannel">
+            <endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/remoting-amf" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>
+        
+    </channels>
+
+    <logging>
+        <!-- You may also use flex.messaging.log.ServletLogTarget -->
+        <target class="flex.messaging.log.ServletLogTarget" level="Warn"> <!-- Other options : Debug, All, Warn -->
+            <properties>
+                <prefix>[BlazeDS Flower Web] </prefix>
+                <includeDate>false</includeDate>
+                <includeTime>false</includeTime>
+                <includeLevel>false</includeLevel>
+                <includeCategory>true</includeCategory>
+            </properties>
+            <filters>
+				<pattern>*</pattern>
+                <pattern>Endpoint.*</pattern>
+                <pattern>Service.*</pattern>
+                <pattern>Configuration</pattern>
+            </filters>
+        </target>
+    </logging>
+
+<!--     <system> -->
+<!--         <redeploy> -->
+<!--             <enabled>true</enabled> -->
+<!--             <watch-interval>20</watch-interval> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/services-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/proxy-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/remoting-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/messaging-config.xml</watch-file>             -->
+<!--             <touch-file>{context.root}/WEB-INF/web.xml</touch-file> -->
+<!--         </redeploy> -->
+<!--     </system> -->
+</services-config>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+			   creationComplete="list = populateWithTestData()" xmlns:local="*">
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.model.Company;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TitleWindow;
+			
+			[Bindable]
+			private var list:ArrayCollection;
+			
+			private function populateWithTestData():ArrayCollection {
+				var result:ArrayCollection = new ArrayCollection();
+				for (var i:int = 0; i < 10; i++) {
+					var company:Company = new Company();
+					company.name = "Name " + i;
+					company.cui = "CUI " + i;
+					company.address = "Address " + i;
+					result.addItem(company);
+				}
+				return result;
+			}
+			
+			protected function editClickHandler(event:MouseEvent):void {
+				
+				var form:CompanyForm = new CompanyForm();
+				form.model = Company(dataGrid.selectedItem);
+				form.percentHeight = 100;
+				form.percentWidth = 100;
+				
+				var window:TitleWindow = new TitleWindow();
+				window.width = 400;
+				window.height = 500;
+				window.addElement(form);
+				window.addEventListener(CloseEvent.CLOSE, function (event:Event):void {
+					PopUpManager.removePopUp(window);
+				});
+				
+				PopUpManager.addPopUp(window, this);			
+				PopUpManager.centerPopUp(window);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:Fade id="fade" alphaFrom="0" alphaTo="1"/>
+		<s:RemoteObject id="companyService" destination="companyService">
+			<s:method name="sayHello" result="Alert.show(event.result + '')"/>	
+			<s:method name="getAllCompanies" result="list = ArrayCollection(event.result)"/>
+		</s:RemoteObject>
+	</fx:Declarations>
+	
+	<mx:TabNavigator width="100%" height="100%">
+		<mx:HDividedBox label="Companies" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%">
+				<s:HGroup>
+					<s:Button label="Say hello" click="companyService.sayHello('Cristi')"/>
+					<s:Button label="Refresh" click="companyService.getAllCompanies()"/>
+					<s:Button label="Edit" click="editClickHandler(event)"/>
+					<s:Button label="Add" click="list.addItem(new Company())"/>
+					<s:Button label="Remove" click="list.removeItemAt(dataGrid.selectedIndex)" enabled="{dataGrid.selectedItem != null}"/>
+				</s:HGroup>
+				<mx:DataGrid id="dataGrid" width="100%" height="100%" dataProvider="{list}"/>
+			</s:VGroup>
+			<local:CompanyForm model="{Company(dataGrid.selectedItem)}"/>
+		</mx:HDividedBox>
+		<mx:HDividedBox label="Companies" width="100%" height="100%">
+			<s:DataGrid id="dataGrid1" width="100%" height="100%" dataProvider="{list}"/>
+			<local:CompanyForm model="{Company(dataGrid1.selectedItem)}"/>
+		</mx:HDividedBox>
+	</mx:TabNavigator>
+	
+</s:Application>
