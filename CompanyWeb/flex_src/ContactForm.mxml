@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   
+			   creationComplete="companyService.getAllCompanies()"
+			   
+			   >
+	
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.model.*;
+			
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			
+			[Bindable]
+			public var dropdownList:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			public var model:Contact;
+			
+	
+			protected function button1_clickHandler(event:MouseEvent):void {
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function populate_dropdown(event:MouseEvent):void{
+				
+			}
+
+			protected function companyService_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("event " + event.fault.faultDetail);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<fx:Declarations>
+		<s:Fade id="fade" alphaFrom="0" alphaTo="1"/>
+		<s:RemoteObject id="companyService" destination="companyService" fault="companyService_faultHandler(event)">
+			<s:method name="getAllCompanies" result="dropdownList = ArrayCollection(event.result)"/>
+		</s:RemoteObject>
+	</fx:Declarations>
+	
+	<s:Form width="100%">
+		<s:FormItem width="100%" label="Id">
+			<s:TextInput id="idTextInput" enabled="false" text="{model.id}"/>
+		</s:FormItem>
+		<s:FormItem width="100%" label="Name">
+			<s:TextInput text="@{model.name}"/>
+		</s:FormItem>
+		<s:FormItem width="100%" label="Address">
+			<s:TextInput text="@{model.address}"/>
+		</s:FormItem>
+		<s:FormItem width="100%" label="Company">
+			<s:DropDownList id="list1" width="100%" labelField="name" prompt="Select Company" dataProvider="{dropdownList}"/>
+		</s:FormItem>
+		<s:VGroup width="100%" height="100%">
+			<s:HGroup>
+				<s:Button label="Submit"/>
+				<s:Button label="Cancel" click="button1_clickHandler(event)"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:Form>	
+	
+</s:TitleWindow>
