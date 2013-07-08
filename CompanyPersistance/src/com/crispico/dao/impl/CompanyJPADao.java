@@ -41,7 +41,9 @@ public class CompanyJPADao implements CompanyDao {
 
 	@Override
 	public void remove(Company company) {
+		entityManager.getTransaction().begin();
 		entityManager.remove(company);
+		entityManager.getTransaction().commit();
 	}
 	
 }

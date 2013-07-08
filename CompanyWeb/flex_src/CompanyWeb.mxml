@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
-			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
-			   creationComplete="list = populateWithTestData()" xmlns:local="*">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:local="*"
+			   minWidth="955" minHeight="600" creationComplete="companyService.getAllCompanies()">
 	<fx:Script>
 		<![CDATA[
 			import com.crispico.model.Company;
@@ -26,6 +27,7 @@
 					company.address = "Address " + i;
 					result.addItem(company);
 				}
+				
 				return result;
 			}
 			
@@ -36,16 +38,14 @@
 				form.percentHeight = 100;
 				form.percentWidth = 100;
 				
-				var window:TitleWindow = new TitleWindow();
-				window.width = 400;
-				window.height = 500;
-				window.addElement(form);
-				window.addEventListener(CloseEvent.CLOSE, function (event:Event):void {
-					PopUpManager.removePopUp(window);
-				});
+		
 				
-				PopUpManager.addPopUp(window, this);			
-				PopUpManager.centerPopUp(window);
+				form.addEventListener(CloseEvent.CLOSE, function (event:Event):void {
+					PopUpManager.removePopUp(form);
+				}); 
+			
+				PopUpManager.addPopUp(form, this);			
+				PopUpManager.centerPopUp(form);
 			}
 			
 		]]>
@@ -56,26 +56,32 @@
 		<s:RemoteObject id="companyService" destination="companyService">
 			<s:method name="sayHello" result="Alert.show(event.result + '')"/>	
 			<s:method name="getAllCompanies" result="list = ArrayCollection(event.result)"/>
+			<s:method name="addOrModifyCompany" result="list = ArrayCollection(event.result)"/>
+			<s:method name="removeCompany" result="list = ArrayCollection(event.result)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	
 	<mx:TabNavigator width="100%" height="100%">
-		<mx:HDividedBox label="Companies" width="100%" height="100%">
+		<mx:HDividedBox width="100%" height="100%" label="Companies">
 			<s:VGroup width="100%" height="100%">
 				<s:HGroup>
 					<s:Button label="Say hello" click="companyService.sayHello('Cristi')"/>
 					<s:Button label="Refresh" click="companyService.getAllCompanies()"/>
-					<s:Button label="Edit" click="editClickHandler(event)"/>
-					<s:Button label="Add" click="list.addItem(new Company())"/>
-					<s:Button label="Remove" click="list.removeItemAt(dataGrid.selectedIndex)" enabled="{dataGrid.selectedItem != null}"/>
+					<s:Button label="Edit" click="editClickHandler(event)"
+							  enabled="{dataGrid.selectedItem != null}"/>
+					<s:Button label="Add" click="companyService.addOrModifyCompany(new Company())"/>
+					<s:Button label="Remove"
+							  click="companyService.removeCompany(dataGrid.selectedItem.id)"
+							  enabled="{dataGrid.selectedItem != null}"/>
+					
 				</s:HGroup>
 				<mx:DataGrid id="dataGrid" width="100%" height="100%" dataProvider="{list}"/>
 			</s:VGroup>
-			<local:CompanyForm model="{Company(dataGrid.selectedItem)}"/>
 		</mx:HDividedBox>
-		<mx:HDividedBox label="Companies" width="100%" height="100%">
+		
+		<mx:HDividedBox width="100%" height="100%" label="Contacts">
 			<s:DataGrid id="dataGrid1" width="100%" height="100%" dataProvider="{list}"/>
-			<local:CompanyForm model="{Company(dataGrid1.selectedItem)}"/>
+			<!--<local:CompanyForm model="{Company(dataGrid1.selectedItem)}"/>-->
 		</mx:HDividedBox>
 	</mx:TabNavigator>
 	

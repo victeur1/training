@@ -12,5 +12,10 @@ package com.crispico.model {
 		
 		public var address:String;
 		
+		public function Company () 	{
+			this.name = "theName";
+			this.cui = "thecui";
+		}
+		
 	}
 }

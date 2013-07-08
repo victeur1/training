@@ -7,18 +7,20 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.crispico.model.Company</class>
 		<class>com.crispico.model.Client</class>
+		<class>com.crispico.model.Contact</class>
 	
 		<properties>
 			<property name="hibernate.connection.url"
 				value="jdbc:postgresql://localhost:5432/company" />
 			<property name="hibernate.connection.username" value="postgres" />
-			<property name="hibernate.connection.password" value="postgres" />
+			<property name="hibernate.connection.password" value="admin" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
 			<property name="hibernate.show-sql" value="false" />
 			<property name="hibernate.jdbc.batch_size" value="1000" />		
-<!-- 			<property name="hibernate.hbm2ddl.auto" value="create" /> -->
-			
+<!-- 			Creaza automat tabelele in baza de date  -->
+
+<!-- 		<property name="hibernate.hbm2ddl.auto" value="create" />  -->
 		</properties>
 	</persistence-unit>
 </persistence>

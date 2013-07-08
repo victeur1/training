@@ -29,6 +29,21 @@ public class Company {
 	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL }, mappedBy = "company")
 	private Set<Client> clients = new HashSet<Client>();
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL }, mappedBy = "company")
+	private Set<Contact> contacts = new HashSet<Contact>();
+
+	public Set<Contact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(Set<Contact> contacts) {
+		this.contacts = contacts;
+	}
+
+	public void addContact(Contact contact) {
+		contacts.add(contact);
+	}
+
 	public Integer getId() {
 		return id;
 	}

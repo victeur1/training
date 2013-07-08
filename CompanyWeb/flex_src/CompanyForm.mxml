@@ -1,14 +1,42 @@
+
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx">
 
+	
+	<fx:Declarations>
+	
+		<s:RemoteObject id="companyFormService" destination="companyService">
+			
+		</s:RemoteObject>
+		
+		
+	</fx:Declarations>
+	
+	
 	<fx:Script>
 		<![CDATA[
 			import com.crispico.model.Company;
 			
+			import mx.managers.PopUpManager;
+
+			
 			[Bindable]
 			public var model:Company;
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				
+				companyFormService.addOrModifyCompany(model);
+				PopUpManager.removePopUp(this);
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -25,6 +53,11 @@
 		<s:FormItem width="100%" label="Address">
 			<s:TextInput text="@{model.address}"/>
 		</s:FormItem>
+		
+		<s:Button label="Apply" click="button2_clickHandler(event)" />
+		<s:Button label="Cancel" click="button1_clickHandler(event)" />
+		
+		
 	</s:Form>	
 
-</s:Group>
+</s:TitleWindow>
